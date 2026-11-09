@@ -5,6 +5,9 @@ extends Node3D
 ##
 ## The placement data comes from the original game's `landscapeData.json`.
 
+## The terrain's UVs are in model units; the baked map covers 3611 of them.
+const UV_SCALE := 1.0 / 3611.0
+
 const GROUND_COLOR := Color(0.44, 0.78, 0.36)
 const WATER_COLOR := Color(0.35, 0.68, 0.86)
 
@@ -116,13 +119,16 @@ func _build_terrain() -> void:
 			"ground":
 				if ground_tex:
 					mat.albedo_texture = ground_tex
+				mat.uv1_scale = Vector3(UV_SCALE, UV_SCALE, 1.0)
 			"scene":
 				if scene_tex:
 					mat.albedo_texture = scene_tex
+				mat.uv1_scale = Vector3(UV_SCALE, UV_SCALE, 1.0)
 			"water":
 				mat.albedo_color = Color(0.36, 0.66, 0.85)
 				mat.roughness = 0.08
 				mat.metallic = 0.4
+				mat.uv1_scale = Vector3(UV_SCALE, UV_SCALE, 1.0)
 		mesh.material_override = mat
 		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 

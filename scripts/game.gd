@@ -21,6 +21,7 @@ var _sun: DirectionalLight3D
 var _sky_material: ProceduralSkyMaterial
 var _night_ratio := 0.0
 var _night_target := 0.0
+var _compatibility := false
 
 
 func _ready() -> void:
@@ -123,10 +124,18 @@ func _build_scene() -> void:
 	env.background_mode = Environment.BG_SKY
 	env.sky = Sky.new()
 	env.sky.sky_material = _sky_material
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	env.ambient_light_energy = 1.0
+	# The compatibility renderer (OpenGL ES on Android) gets its ambient light
+	# from the sky much more strongly, so it needs a gentler setup.
+	_compatibility = RenderingServer.get_current_rendering_method() == "gl_compatibility"
+	if _compatibility:
+		env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+		env.ambient_light_color = Color("#6f9ec4")
+		env.ambient_light_energy = 0.32
+	else:
+		env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+		env.ambient_light_energy = 1.0
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 1.0
+	env.tonemap_exposure = 0.72 if _compatibility else 1.0
 	env.fog_enabled = true
 	env.fog_light_color = Color("#cfe9ff")
 	env.fog_density = 0.012
@@ -136,7 +145,7 @@ func _build_scene() -> void:
 
 	_sun = DirectionalLight3D.new()
 	_sun.rotation_degrees = Vector3(-48.0, 132.0, 0.0)
-	_sun.light_energy = 1.35
+	_sun.light_energy = 1.0 if _compatibility else 1.35
 	_sun.light_color = Color("#fff6e0")
 	_sun.shadow_enabled = true
 	_sun.directional_shadow_max_distance = 20.0
@@ -395,11 +404,13 @@ func _update_day_night() -> void:
 	_sky_material.sky_horizon_color = day_horizon.lerp(night_horizon, t)
 	_sky_material.ground_horizon_color = Color("#bfe3b0").lerp(Color("#16204a"), t)
 	_sky_material.ground_bottom_color = Color("#6fae52").lerp(Color("#0b1230"), t)
-	_sun.light_energy = lerpf(1.35, 0.18, t)
+	_sun.light_energy = lerpf(0.95 if _compatibility else 1.35, 0.18, t)
 	_sun.light_color = Color("#fff6e0").lerp(Color("#9fb6ff"), t)
 	_sun.rotation_degrees = Vector3(lerpf(-48.0, -22.0, t), 132.0, 0.0)
 	var env := _environment.environment
-	env.ambient_light_energy = lerpf(1.0, 0.35, t)
+	if _compatibility:
+		env.ambient_light_color = Color("#6f9ec4").lerp(Color("#1a2350"), t)
+	env.ambient_light_energy = lerpf(0.32 if _compatibility else 1.0, 0.22, t)
 	env.fog_light_color = Color("#cfe9ff").lerp(Color("#141a44"), t)
 
 
