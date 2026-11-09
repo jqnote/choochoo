@@ -1,0 +1,7 @@
+# Godot's import cache and editor state
+.godot/
+*.translation
+
+# Exported builds
+build/
+export_presets.cfg

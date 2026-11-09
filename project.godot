@@ -1,0 +1,30 @@
+; Engine configuration file.
+; Choo-Choo World - a Godot re-implementation of choochooworld.com
+
+config_version=5
+
+[application]
+
+config/name="Choo-Choo World"
+config/description="Build the train set of your dreams - a wooden railway builder."
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+anti_aliasing/quality/msaa_3d=2
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
+textures/default_filters/anisotropic_filtering_level=2
+
+[physics]
+
+common/physics_ticks_per_second=60
