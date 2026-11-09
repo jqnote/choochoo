@@ -33,12 +33,31 @@ when the line closes back on the station the train runs forever.
 * The original music and sound effects.
 * Screenshots of the scene can be downloaded from the camera button.
 
+## Downloads
+
+Pre-built packages are published on the
+[releases page](https://github.com/jqnote/choochoo/releases):
+
+| file | platform |
+|---|---|
+| `ChooChooWorld.apk` | Android 7.0+ (arm64-v8a, armeabi-v7a) |
+| `ChooChooWorld-macos.zip` | macOS 10.13+ (universal) |
+| `ChooChooWorld-windows-x86_64.zip` | Windows 64-bit |
+| `ChooChooWorld.x86_64` | Linux 64-bit |
+
+The Android APK is signed with the debug key kept in `android/`, so it
+installs straight from the browser.
+
 ## Running
 
 ```bash
-/Applications/Godot.app/Contents/MacOS/Godot --path .          # play
-/Applications/Godot.app/Contents/MacOS/Godot --path . --headless --selftest   # run the checks
+godot --path .                                          # play
+godot --path . --headless --selftest                   # run the checks
+godot --path . --headless --export-release "Android"    # build the APK
 ```
+
+Export templates for your Godot version and the Android SDK are needed for
+the last one.
 
 Useful command line switches:
 
